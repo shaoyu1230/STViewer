@@ -19,8 +19,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-name/STViewer"
-Issues = "https://github.com/your-name/STViewer/issues"
+Homepage = "https://github.com/shaoyu1230/STViewer"
+Issues = "https://github.com/shaoyu1230/STViewer/issues"
 
 [project.scripts]
 stviewer = "stviewer.app:main"
