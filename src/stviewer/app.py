@@ -8,6 +8,8 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from stviewer.core import (
+    apply_cellid_column,
+    default_cellid_column,
     default_region_name,
     infer_color_mode,
     is_continuous_series,
@@ -252,7 +254,8 @@ def main() -> None:
         st.header("Input")
         uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
         st.markdown(
-            "Required columns: `x`, `y`, `X_index`\n\n"
+            "Required columns: `x`, `y`\n\n"
+            "Cell id column: choose from uploaded data, default prefers `X_index`\n\n"
             "Optional columns: any metadata columns, such as `CellType`, `Cluster`, score, or abundance"
         )
 
@@ -267,14 +270,26 @@ def main() -> None:
 
     try:
         raw_df = load_csv(file_bytes)
-        df = standardize_dataframe(raw_df)
+        base_df = standardize_dataframe(raw_df)
     except Exception as exc:
         st.error(f"Failed to read CSV: {exc}")
         return
 
-    if df.empty:
+    if base_df.empty:
         st.error("No valid rows found after parsing `x` and `y`.")
         return
+
+    cellid_candidates = [col for col in base_df.columns if col not in {"x", "y", "row_id"}]
+    if not cellid_candidates:
+        st.error("No available column found for cell id. Please provide at least one non-coordinate column.")
+        return
+
+    with st.sidebar:
+        default_cellid = default_cellid_column(base_df)
+        default_index = cellid_candidates.index(default_cellid) if default_cellid in cellid_candidates else 0
+        cellid_column = st.selectbox("Cell ID column", cellid_candidates, index=default_index)
+
+    df = apply_cellid_column(base_df, cellid_column)
 
     meta_cols = metadata_columns(df)
 

@@ -29,7 +29,7 @@ The project is organized as:
 ## Features
 
 - Load CSV with spatial coordinates
-- Let the user choose the cell ID column
+- Let the user choose the cell ID column, default preferring `X_index`
 - Visualize cells by metadata columns
 - Choose color columns dynamically
 - Support region selection and region export

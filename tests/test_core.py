@@ -5,8 +5,10 @@ import unittest
 import pandas as pd
 
 from stviewer.core import (
+    apply_cellid_column,
     build_column_mapping,
     clean_input_columns,
+    default_cellid_column,
     default_region_name,
     infer_color_mode,
     merge_saved_regions,
@@ -27,7 +29,8 @@ class TestCore(unittest.TestCase):
     def test_build_column_mapping_supports_x_index_alias(self):
         df = pd.DataFrame({"x": [1], "y": [2], "X_index": ["c1"]})
         mapping = build_column_mapping(df)
-        self.assertEqual(mapping["cellid"], "X_index")
+        self.assertEqual(mapping["x"], "x")
+        self.assertEqual(mapping["y"], "y")
 
     def test_standardize_dataframe_keeps_valid_rows(self):
         df = pd.DataFrame(
@@ -39,8 +42,19 @@ class TestCore(unittest.TestCase):
             }
         )
         standardized = standardize_dataframe(df)
-        self.assertEqual(list(standardized["cellid"]), ["c1", "c3"])
         self.assertIn("row_id", standardized.columns)
+        self.assertEqual(list(standardized["x"]), [1.0, 3.0])
+
+    def test_default_cellid_column_prefers_x_index(self):
+        df = pd.DataFrame({"x": [1], "y": [2], "X_index": ["c1"], "CellType": ["A"]})
+        self.assertEqual(default_cellid_column(df), "X_index")
+
+    def test_apply_cellid_column_creates_cellid(self):
+        df = pd.DataFrame({"x": [1], "y": [2], "X_index": ["c1"], "CellType": ["A"], "row_id": [0]})
+        updated = apply_cellid_column(df, "X_index")
+        self.assertIn("cellid", updated.columns)
+        self.assertEqual(list(updated["cellid"]), ["c1"])
+        self.assertNotIn("X_index", updated.columns)
 
     def test_infer_color_mode(self):
         self.assertEqual(infer_color_mode(pd.Series([1, 2, 3])), "continuous")

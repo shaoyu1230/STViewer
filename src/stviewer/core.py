@@ -6,7 +6,6 @@ import pandas as pd
 REQUIRED_COLUMNS = {
     "x": {"x"},
     "y": {"y"},
-    "cellid": {"x_index", "cellid", "cell_id", "cell", "barcode"},
 }
 
 
@@ -42,17 +41,33 @@ def standardize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
         columns={
             mapping["x"]: "x",
             mapping["y"]: "y",
-            mapping["cellid"]: "cellid",
         }
     ).copy()
 
     renamed["x"] = pd.to_numeric(renamed["x"], errors="coerce")
     renamed["y"] = pd.to_numeric(renamed["y"], errors="coerce")
-    renamed["cellid"] = renamed["cellid"].astype(str)
 
     renamed = renamed.dropna(subset=["x", "y"]).reset_index(drop=True)
     renamed["row_id"] = renamed.index.astype(int)
     return renamed
+
+
+def default_cellid_column(df: pd.DataFrame) -> str | None:
+    normalized = {normalize_name(col): col for col in df.columns}
+    for candidate in ["x_index", "cellid", "cell_id", "cell", "barcode"]:
+        if candidate in normalized:
+            return normalized[candidate]
+    excluded = {col for col in df.columns if normalize_name(col) in {"x", "y"}}
+    available = [col for col in df.columns if col not in excluded]
+    return available[0] if available else None
+
+
+def apply_cellid_column(df: pd.DataFrame, cellid_column: str) -> pd.DataFrame:
+    updated = df.copy()
+    updated["cellid"] = updated[cellid_column].astype(str)
+    if cellid_column != "cellid":
+        updated = updated.drop(columns=[cellid_column])
+    return updated
 
 
 def metadata_columns(df: pd.DataFrame) -> list[str]:
