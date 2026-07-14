@@ -1,5 +1,5 @@
-from stviewer.app import main
+from stviewer.cli import main
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

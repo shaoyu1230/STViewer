@@ -1,5 +1,7 @@
 # STViewer
 
+[![CI](https://github.com/shaoyu1230/STViewer/actions/workflows/ci.yml/badge.svg)](https://github.com/shaoyu1230/STViewer/actions/workflows/ci.yml)
+
 STViewer is a lightweight spatial transcriptomics viewer built with Streamlit.
 
 ## Python Environment
@@ -93,6 +95,7 @@ examples/example_spatial.csv
 - Usage guide: `docs/usage.md`
 - GitHub prep notes: `docs/github_prep.md`
 - Change log: `CHANGELOG.md`
+- Contribution guide: `CONTRIBUTING.md`
 
 ## Notes
 
@@ -105,5 +108,5 @@ examples/example_spatial.csv
 
 1. Add screenshots or a short demo GIF
 2. Verify startup on Linux desktop environments
-3. Add automated tests and GitHub Actions
+3. Expand automated tests beyond syntax checks
 4. Expand documentation for region-selection workflow

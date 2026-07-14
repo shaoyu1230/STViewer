@@ -32,5 +32,10 @@ jobs:
       - name: Verify Python entry files
         run: |
           python -m py_compile src/stviewer/app.py
+          python -m py_compile src/stviewer/core.py
+          python -m py_compile src/stviewer/cli.py
           python -m py_compile src/stviewer/__main__.py
           python -m py_compile scripts/run_stviewer.py
+
+      - name: Run tests
+        run: python -m unittest discover -s tests
