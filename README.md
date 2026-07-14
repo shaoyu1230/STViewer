@@ -2,6 +2,19 @@
 
 STViewer is a lightweight spatial transcriptomics viewer built with Streamlit.
 
+## Python Environment
+
+Recommended environment:
+
+- Python `3.9` to `3.12`
+- `pip` for dependency installation
+
+Core Python dependencies:
+
+- `streamlit>=1.35`
+- `pandas>=2.0`
+- `plotly>=5.20`
+
 ## Project Layout
 
 The project is organized as:
@@ -20,10 +33,29 @@ The project is organized as:
 - Support region selection and region export
 - Support both categorical and continuous metadata coloring
 
+## Installation
+
+### Option 1: Create a virtual environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Option 2: Install as an editable package
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
 ## Local Run
 
 ```bash
-cd /Users/angela/Documents/00_annoroad/06_Development/STHub/STViewer
+git clone git@github.com:shaoyu1230/STViewer.git
+cd STViewer
 pip install -r requirements.txt
 python3 -m streamlit run src/stviewer/app.py --server.port 8501
 ```
@@ -34,18 +66,17 @@ Then open:
 
 ## Linux-Friendly Script
 
-You can also use:
+After installing dependencies, you can also use:
 
 ```bash
 bash scripts/start.sh
 ```
 
-## Future Package Run
+## Command-Line Run
 
-After packaging or editable install:
+After editable install:
 
 ```bash
-pip install -e .
 stviewer
 ```
 
@@ -63,10 +94,15 @@ examples/example_spatial.csv
 - GitHub prep notes: `docs/github_prep.md`
 - Change log: `CHANGELOG.md`
 
-## Suggested GitHub Release Checklist
+## Notes
 
-1. Replace placeholder GitHub URLs in `pyproject.toml`
-2. Add real screenshots to the repository
-3. Verify startup on a Linux machine
-4. Decide the first public version scope
-5. Initialize a dedicated git repository and push to GitHub
+- This repository currently targets lightweight local usage.
+- Input data is expected to be CSV-based.
+- Rowname-like columns such as `Unnamed: 0` are ignored during import.
+
+## Suggested Next Improvements
+
+1. Add screenshots or a short demo GIF
+2. Verify startup on Linux desktop environments
+3. Add automated tests and GitHub Actions
+4. Expand documentation for region-selection workflow
