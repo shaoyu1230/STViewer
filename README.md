@@ -99,6 +99,7 @@ examples/example_spatial.csv
 - This repository currently targets lightweight local usage.
 - Input data is expected to be CSV-based.
 - Rowname-like columns such as `Unnamed: 0` are ignored during import.
+- Basic GitHub Actions CI is enabled for package installation and Python syntax checks.
 
 ## Suggested Next Improvements
 
