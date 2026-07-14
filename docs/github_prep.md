@@ -33,6 +33,8 @@ At minimum:
 - startup command
 - example workflow
 - known limitations
+- cell ID column selection rules
+- screenshot or short demo GIF
 
 ### 5. Prepare repository hygiene
 
@@ -50,3 +52,11 @@ At minimum:
 4. Add screenshots
 5. Initialize git repo or create new GitHub repo
 6. Push first public commit
+
+## Suggested Public Release Checklist
+
+- confirm `README.md` matches the real startup command
+- confirm `requirements.txt` and `pyproject.toml` are consistent
+- verify `stviewer` launches in a clean virtual environment
+- verify Linux launcher script works on another machine
+- add a repository topic list such as `streamlit`, `spatial-transcriptomics`, `bioinformatics`

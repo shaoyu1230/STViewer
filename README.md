@@ -17,6 +17,11 @@ Core Python dependencies:
 - `pandas>=2.0`
 - `plotly>=5.20`
 
+System recommendation:
+
+- Linux or macOS
+- modern browser such as Chrome, Edge, or Safari
+
 ## Project Layout
 
 The project is organized as:
@@ -34,6 +39,7 @@ The project is organized as:
 - Choose color columns dynamically
 - Support region selection and region export
 - Support both categorical and continuous metadata coloring
+- Ignore CSV row names such as `Unnamed: 0`
 
 ## Installation
 
@@ -43,6 +49,7 @@ The project is organized as:
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+pip install -e .
 ```
 
 ### Option 2: Install as an editable package
@@ -58,8 +65,11 @@ pip install -e .
 ```bash
 git clone git@github.com:shaoyu1230/STViewer.git
 cd STViewer
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-python3 -m streamlit run src/stviewer/app.py --server.port 8501
+pip install -e .
+stviewer
 ```
 
 Then open:
@@ -74,6 +84,12 @@ After installing dependencies, you can also use:
 bash scripts/start.sh
 ```
 
+To change the port:
+
+```bash
+STVIEWER_PORT=8502 bash scripts/start.sh
+```
+
 ## Command-Line Run
 
 After editable install:
@@ -81,6 +97,25 @@ After editable install:
 ```bash
 stviewer
 ```
+
+Or:
+
+```bash
+stviewer --port 8502 --address 127.0.0.1
+```
+
+## Linux Desktop Integration
+
+To install a local launcher and desktop entry on Linux:
+
+```bash
+bash scripts/install_linux.sh
+```
+
+This will create:
+
+- `~/.local/bin/stviewer`
+- `~/.local/share/applications/stviewer.desktop`
 
 ## Example Data
 
