@@ -158,6 +158,7 @@ This creates:
 
 - Tutorial: `docs/tutorial.md`
 - Usage guide: `docs/usage.md`
+- Release notes draft: `docs/release_v0.1.0.md`
 - GitHub prep notes: `docs/github_prep.md`
 - Change log: `CHANGELOG.md`
 - Contribution guide: `CONTRIBUTING.md`
