@@ -271,7 +271,7 @@ def main() -> None:
     with st.sidebar:
         st.header("Input")
         uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
-        use_example = st.button("Load example data", use_container_width=True)
+        use_example = st.button("Load example data", width="stretch")
         st.markdown(
             "Required columns: `x`, `y`\n\n"
             "Cell id column: choose from uploaded data, default prefers `X_index`\n\n"
@@ -373,7 +373,7 @@ def main() -> None:
     )
     event = st.plotly_chart(
         fig,
-        use_container_width=True,
+        width="stretch",
         key="spatial_plot",
         on_select="rerun",
         selection_mode=("lasso", "box"),
@@ -402,10 +402,10 @@ def main() -> None:
                 )
                 top_counts.columns = [color_by, "count"]
                 st.caption(f"Top selected categories by `{color_by}`")
-                st.dataframe(top_counts, use_container_width=True, height=220)
+                st.dataframe(top_counts, width="stretch", height=220)
             with st.expander("Preview selected cells", expanded=False):
                 preview_cols = ["cellid"] + metadata_columns(selected_df)
-                st.dataframe(selected_df[preview_cols].head(50), use_container_width=True, height=260)
+                st.dataframe(selected_df[preview_cols].head(50), width="stretch", height=260)
 
     with right_col:
         st.subheader("Save Region")
@@ -416,7 +416,7 @@ def main() -> None:
             value=suggested_region_name,
             placeholder="Tumor1",
         )
-        if st.button("Save selected cells", use_container_width=True):
+        if st.button("Save selected cells", width="stretch"):
             if selected_df.empty:
                 st.warning("No selected cells to save.")
             elif not label_group.strip():
@@ -444,7 +444,7 @@ def main() -> None:
             data=current_export.to_csv(index=False).encode("utf-8"),
             file_name="selected_cells.csv",
             mime="text/csv",
-            use_container_width=True,
+            width="stretch",
             disabled=current_export.empty or not label_group.strip() or not region_name.strip(),
         )
 
@@ -453,7 +453,7 @@ def main() -> None:
     if saved_regions.empty:
         st.info("Saved groups will appear here.")
     else:
-        st.dataframe(saved_regions, use_container_width=True, height=260)
+        st.dataframe(saved_regions, width="stretch", height=260)
         st.download_button(
             "Download all saved groups",
             data=saved_regions.to_csv(index=False).encode("utf-8"),
@@ -483,12 +483,12 @@ def main() -> None:
         )
         st.plotly_chart(
             region_fig,
-            use_container_width=True,
+            width="stretch",
             key="saved_region_plot",
         )
 
     with st.expander("Dataset preview"):
-        st.dataframe(raw_df.head(20), use_container_width=True)
+        st.dataframe(raw_df.head(20), width="stretch")
 
 
 if __name__ == "__main__":
