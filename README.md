@@ -25,177 +25,21 @@ It is designed for Linux and macOS and runs locally through Streamlit.
 - Export the current selection or all saved regions as CSV
 - Preview saved regions on a second plot
 
-## Input File
+## Tutorial
 
-STViewer currently accepts:
+Detailed documentation is now separated into a tutorial page:
 
-- `.csv`
+- `docs/tutorial.md`
 
-### Required Columns
+It includes:
 
-- `x`: cell or spot x coordinate
-- `y`: cell or spot y coordinate
-
-### Cell ID Column
-
-The cell ID column is not fixed anymore.
-
-- After loading the CSV, STViewer asks the user to choose one column as `cellid`
-- If `X_index` exists, it is selected by default
-- Other common choices can also be used, such as `cellid`, `CellID`, `barcode`, or any custom column
-
-### Optional Columns
-
-Any additional column can be used as metadata, for example:
-
-- `CellType`
-- `Cluster`
-- `MajorType`
-- `sample`
-- `Score`
-- `abundance`
-- custom clinical or annotation columns
-
-### Input Rules
-
-- CSV row names will be ignored automatically if they appear as `Unnamed: 0`
-- `x` and `y` are converted to numeric values
-- rows with invalid `x` or `y` are dropped automatically
-- metadata column names do not need to be fixed
-- both categorical and continuous variables are supported
-
-### Example Input
-
-```csv
-x,y,X_index,CellType,Cluster,Score
-102.5,88.1,cell_001,T_cell,C1,0.82
-110.2,92.4,cell_002,T_cell,C1,0.76
-95.8,101.9,cell_003,B_cell,C2,0.31
-120.7,115.2,cell_004,Fibroblast,C3,0.55
-```
-
-You can also test the built-in example file:
-
-```text
-examples/example_spatial.csv
-```
-
-## Visualization Functions
-
-### Main Spatial View
-
-The main plot shows all visible cells using the real coordinate proportion of `x` and `y`.
-
-You can:
-
-- zoom and pan
-- lasso select cells
-- box select cells
-- hover to inspect `cellid`, coordinates, and current color value
-- adjust point size
-- invert the y-axis if needed
-
-### Color Modes
-
-If no color column is selected:
-
-- cells are displayed in gray
-
-If the selected column is categorical:
-
-- cells are shown with discrete colors
-- each category can be recolored interactively
-- hex color values such as `#E64B35` are supported
-
-If the selected column is continuous:
-
-- cells are shown with a continuous color scale
-
-### Filtering
-
-You can filter visible cells by one categorical metadata column at a time.
-
-This is useful when you want to:
-
-- display only one sample
-- focus on one major lineage
-- simplify dense datasets before selecting regions
-
-## Region Annotation Workflow
-
-### Select Cells
-
-Use lasso or box selection on the main plot.
-
-The app records:
-
-- how many cells are currently selected
-- top categories among selected cells for the current color column
-
-### Save Region
-
-To save the selection:
-
-1. Enter a `Label group`, such as `Tumor`
-2. Enter a `Region name`, such as `Tumor1`
-3. Click `Save selected cells`
-
-One label group can contain multiple regions, for example:
-
-- `Tumor1`
-- `Tumor2`
-- `Tumor3`
-
-### Saved Region Preview
-
-Saved regions are displayed in a second plot and can be recolored by:
-
-- `region_label`
-- `label_group`
-- `region_name`
-
-This is helpful for checking whether multiple manually selected regions look correct after saving.
-
-## Output Files
-
-STViewer supports two CSV exports.
-
-### 1. Current Selection Export
-
-File name:
-
-- `selected_cells.csv`
-
-Columns:
-
-- `cellid`
-- `label_group`
-- `region_name`
-
-This export contains only the cells in the current selection.
-
-### 2. All Saved Regions Export
-
-File name:
-
-- `annotated_regions.csv`
-
-Columns:
-
-- `cellid`
-- `label_group`
-- `region_name`
-
-This export contains all saved regions in the current session.
-
-### Output Example
-
-```csv
-cellid,label_group,region_name
-cell_001,Tumor,Tumor1
-cell_002,Tumor,Tumor1
-cell_010,Tumor,Tumor2
-```
+- input file description
+- cell ID column rules
+- metadata column usage
+- visualization functions
+- region selection workflow
+- output file description
+- example input and output
 
 ## Python Environment
 
@@ -299,6 +143,7 @@ This creates:
 
 ## Documentation
 
+- Tutorial: `docs/tutorial.md`
 - Usage guide: `docs/usage.md`
 - GitHub prep notes: `docs/github_prep.md`
 - Change log: `CHANGELOG.md`
