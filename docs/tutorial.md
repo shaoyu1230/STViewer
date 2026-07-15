@@ -250,6 +250,124 @@ Direct Streamlit run:
 python3 -m streamlit run src/stviewer/app.py --server.port 8501
 ```
 
+## Remote Linux Deployment
+
+STViewer can also run on a remote Linux server.
+
+### Important Behavior
+
+When STViewer is deployed on a remote server:
+
+- `Load CSV` uploads the file from your local computer browser to the remote server process
+- `Download current selection` downloads the exported CSV back to your local computer
+- the input file does not need to already exist on the remote server if you upload it through the browser
+
+This means `Load CSV` usually works fine on a remote server as long as the web page is accessible.
+
+### Recommended Startup Command
+
+To allow access from another machine, do not bind only to `127.0.0.1`.
+
+Use:
+
+```bash
+stviewer --address 0.0.0.0 --port 8501
+```
+
+Or:
+
+```bash
+python3 -m streamlit run src/stviewer/app.py --server.address 0.0.0.0 --server.port 8501
+```
+
+### Access Methods
+
+#### Option 1: Direct Port Access
+
+Open in your browser:
+
+```text
+http://SERVER_IP:8501
+```
+
+This requires:
+
+- server firewall allows the port
+- cloud security group allows the port if applicable
+- Streamlit is listening on `0.0.0.0`
+
+#### Option 2: SSH Port Forwarding
+
+If you do not want to expose the service publicly, use SSH tunneling:
+
+```bash
+ssh -L 8501:127.0.0.1:8501 user@your-server
+```
+
+Then open locally:
+
+```text
+http://127.0.0.1:8501
+```
+
+This is usually the safest and simplest method for internal use.
+
+### Installation Example on Remote Linux
+
+```bash
+git clone git@github.com:shaoyu1230/STViewer.git
+cd STViewer
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+stviewer --address 0.0.0.0 --port 8501
+```
+
+### Notes About File Upload and Download
+
+- the CSV file is chosen from the browser machine, not the server filesystem
+- large CSV uploads depend on network speed
+- browser upload size can be limited by Streamlit or reverse proxies
+- if you deploy behind `nginx`, `apache`, or another proxy, check request body size limits
+- exported CSV files are downloaded to the browser machine
+
+### Common Problems
+
+#### Page opens but CSV upload is slow
+
+Possible reasons:
+
+- large file size
+- slow network between your computer and the server
+- server load is high
+
+#### Page cannot be opened from another machine
+
+Check:
+
+- STViewer started with `--address 0.0.0.0`
+- the server port is open
+- firewall or security group rules allow access
+- reverse proxy configuration is correct if used
+
+#### Upload fails for large files
+
+Check:
+
+- Streamlit upload size limits
+- proxy upload size limits
+- browser connection stability
+
+### Recommended Deployment Practice
+
+For research-group or private-lab use, the most practical setup is often:
+
+1. run STViewer on the Linux server
+2. keep it bound to local or internal access
+3. connect through SSH tunneling
+4. upload CSV files from the local browser only when needed
+
 ## Notes
 
 - the app is intended for local use on Linux or macOS

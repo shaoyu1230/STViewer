@@ -41,6 +41,7 @@ It includes:
 - region selection workflow
 - output file description
 - example input and output
+- remote Linux deployment notes
 
 ## Screenshots
 
