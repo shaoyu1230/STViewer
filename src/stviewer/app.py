@@ -147,6 +147,17 @@ def build_saved_region_view(df: pd.DataFrame, saved_regions: pd.DataFrame) -> pd
     return merged
 
 
+def build_dataset_summary(df: pd.DataFrame, filtered_df: pd.DataFrame, color_by: str | None) -> dict[str, str]:
+    return {
+        "total_cells": f"{len(df):,}",
+        "visible_cells": f"{len(filtered_df):,}",
+        "metadata_columns": f"{len(metadata_columns(df)):,}",
+        "color_mode": (
+            infer_color_mode(filtered_df[color_by]) if color_by and color_by in filtered_df.columns else "none"
+        ),
+    }
+
+
 def render_plot(
     df: pd.DataFrame,
     color_by: str | None,
@@ -321,11 +332,21 @@ def main() -> None:
         categories = filtered_df[color_by].fillna("NA").astype(str).unique().tolist()
         category_color_map = render_category_color_editor(file_signature, color_by, categories)
 
-    overview_col, export_col = st.columns([3, 1])
-    with overview_col:
-        st.metric("Visible cells", f"{len(filtered_df):,}")
-    with export_col:
+    summary = build_dataset_summary(df, filtered_df, color_by)
+    metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
+    with metric_col1:
+        st.metric("Total cells", summary["total_cells"])
+    with metric_col2:
+        st.metric("Visible cells", summary["visible_cells"])
+    with metric_col3:
+        st.metric("Metadata columns", summary["metadata_columns"])
+    with metric_col4:
         st.metric("Saved annotations", f"{len(st.session_state['saved_regions']):,}")
+
+    with st.expander("Dataset summary", expanded=False):
+        st.write(f"Cell ID column: `{cellid_column}`")
+        st.write(f"Current color mode: `{summary['color_mode']}`")
+        st.write(f"Available metadata columns: {', '.join(meta_cols) if meta_cols else 'None'}")
 
     fig = render_plot(
         filtered_df,
@@ -346,15 +367,29 @@ def main() -> None:
     selected_row_ids = [point["customdata"][0] for point in selected_points if "customdata" in point]
     selected_df = selection_to_dataframe(selected_row_ids, filtered_df)
 
-    left_col, right_col = st.columns([2, 1])
+    left_col, right_col = st.columns([1, 1])
 
     with left_col:
-        st.subheader("Selected Cells")
+        st.subheader("Selection Summary")
         if selected_df.empty:
             st.info("Use lasso or box select on the plot to capture cells.")
         else:
-            preview_cols = ["cellid"] + metadata_columns(selected_df)
-            st.dataframe(selected_df[preview_cols], use_container_width=True, height=280)
+            st.metric("Selected cells", f"{len(selected_df):,}")
+            if color_by and color_by in selected_df.columns:
+                top_counts = (
+                    selected_df[color_by]
+                    .fillna("NA")
+                    .astype(str)
+                    .value_counts()
+                    .head(10)
+                    .reset_index()
+                )
+                top_counts.columns = [color_by, "count"]
+                st.caption(f"Top selected categories by `{color_by}`")
+                st.dataframe(top_counts, use_container_width=True, height=220)
+            with st.expander("Preview selected cells", expanded=False):
+                preview_cols = ["cellid"] + metadata_columns(selected_df)
+                st.dataframe(selected_df[preview_cols].head(50), use_container_width=True, height=260)
 
     with right_col:
         st.subheader("Save Region")
