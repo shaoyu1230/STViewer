@@ -13,6 +13,7 @@ It is designed for Linux and macOS and runs locally through Streamlit.
 ## Main Features
 
 - Load CSV files directly without database conversion
+- Load bundled example data for quick testing
 - Require only `x` and `y` as mandatory spatial columns
 - Let the user choose the cell ID column after upload
 - Ignore rowname-like columns such as `Unnamed: 0`
@@ -40,6 +41,16 @@ It includes:
 - region selection workflow
 - output file description
 - example input and output
+
+## Screenshots
+
+Home screen:
+
+![STViewer home](docs/assets/stviewer-home.png)
+
+Loaded example data:
+
+![STViewer example](docs/assets/stviewer-example-detail.png)
 
 ## Python Environment
 
@@ -95,6 +106,8 @@ stviewer
 Then open:
 
 - [http://localhost:8501](http://localhost:8501)
+
+If you just want to try the interface first, click `Load example data` in the sidebar.
 
 ### Run with Project Script
 

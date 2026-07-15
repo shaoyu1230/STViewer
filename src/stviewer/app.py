@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from io import BytesIO
+from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -29,6 +30,12 @@ st.set_page_config(
 @st.cache_data(show_spinner=False)
 def load_csv(file_bytes: bytes) -> pd.DataFrame:
     return pd.read_csv(BytesIO(file_bytes), index_col=False)
+
+
+@st.cache_data(show_spinner=False)
+def load_example_dataframe() -> pd.DataFrame:
+    example_path = Path(__file__).resolve().parents[2] / "examples" / "example_spatial.csv"
+    return pd.read_csv(example_path, index_col=False)
 
 
 def init_session() -> None:
@@ -264,23 +271,31 @@ def main() -> None:
     with st.sidebar:
         st.header("Input")
         uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
+        use_example = st.button("Load example data", use_container_width=True)
         st.markdown(
             "Required columns: `x`, `y`\n\n"
             "Cell id column: choose from uploaded data, default prefers `X_index`\n\n"
             "Optional columns: any metadata columns, such as `CellType`, `Cluster`, score, or abundance"
         )
 
-    if uploaded_file is None:
+    if uploaded_file is None and not use_example:
         st.info("Upload a CSV file to start.")
+        st.caption("You can also click `Load example data` in the sidebar to explore the app quickly.")
         st.code("x,y,X_index,CellType,Cluster,Score", language="text")
         return
 
-    file_bytes = uploaded_file.getvalue()
-    file_signature = hashlib.md5(file_bytes).hexdigest()
-    reset_state_for_new_file(file_signature)
-
     try:
-        raw_df = load_csv(file_bytes)
+        if uploaded_file is not None:
+            file_bytes = uploaded_file.getvalue()
+            file_signature = hashlib.md5(file_bytes).hexdigest()
+            raw_df = load_csv(file_bytes)
+            data_source = uploaded_file.name
+        else:
+            raw_df = load_example_dataframe()
+            file_signature = "example_spatial_csv"
+            data_source = "examples/example_spatial.csv"
+
+        reset_state_for_new_file(file_signature)
         base_df = standardize_dataframe(raw_df)
     except Exception as exc:
         st.error(f"Failed to read CSV: {exc}")
@@ -344,6 +359,7 @@ def main() -> None:
         st.metric("Saved annotations", f"{len(st.session_state['saved_regions']):,}")
 
     with st.expander("Dataset summary", expanded=False):
+        st.write(f"Data source: `{data_source}`")
         st.write(f"Cell ID column: `{cellid_column}`")
         st.write(f"Current color mode: `{summary['color_mode']}`")
         st.write(f"Available metadata columns: {', '.join(meta_cols) if meta_cols else 'None'}")

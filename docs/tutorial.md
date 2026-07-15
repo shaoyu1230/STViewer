@@ -11,6 +11,16 @@ It is designed for:
 - manually selecting regions
 - exporting selected cells and saved regions as CSV
 
+## Interface Preview
+
+Initial view:
+
+![STViewer home](assets/stviewer-home.png)
+
+Example data loaded:
+
+![STViewer example detail](assets/stviewer-example-detail.png)
+
 ## Input File
 
 STViewer currently supports:
@@ -79,6 +89,8 @@ You can test the bundled example file:
 ```text
 examples/example_spatial.csv
 ```
+
+You can also click `Load example data` in the sidebar to open this example without uploading a file manually.
 
 ## Main Functions
 
@@ -210,7 +222,7 @@ cell_010,Tumor,Tumor2
 ## Basic Workflow
 
 1. Start STViewer
-2. Upload a CSV file
+2. Upload a CSV file or click `Load example data`
 3. Choose the cell ID column
 4. Choose a metadata column for coloring
 5. Adjust point size or filter if needed
